@@ -11,13 +11,13 @@ import (
 )
 
 type Bot struct {
-	ID         int
-	Token      string
-	Confession string
-	ChatID     string
-	ChannelID  string
-	Type       string
-	Code       string
+	ID         int    `json:"id"`
+	Token      string `json:"token"`
+	Confession string `json:"confession"`
+	ChatID     string `json:"chatId"`
+	ChannelID  string `json:"channelId"`
+	Type       string `json:"type"`
+	Code       string `json:"code"`
 }
 
 type BotRepository struct {

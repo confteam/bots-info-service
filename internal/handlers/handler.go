@@ -26,7 +26,7 @@ func Start(repo *repository.BotRepository) error {
 	r.HandleFunc("POST /register", h.Register)
 
 	logger.Log.Info("server started", "port", config.Port)
-	return http.ListenAndServe(config.Port, r)
+	return http.ListenAndServe(":"+config.Port, r)
 }
 
 func (h Handler) CreateContext() (context.Context, context.CancelFunc) {

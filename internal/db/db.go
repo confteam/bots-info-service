@@ -12,7 +12,7 @@ import (
 
 func ConnectToDB() (*pgxpool.Pool, error) {
 	config := config.GetConfig()
-	pgConn := fmt.Sprintf("postgres://%s:%s@postgres:5342/bots", config.PostgresUser, config.PostgresPassword)
+	pgConn := fmt.Sprintf("postgres://%s:%s@postgres:5432/bots", config.PostgresUser, config.PostgresPassword)
 	logger.Log.Info("created postgresql connection")
 
 	ctx, cancel := context.WithTimeout(context.Background(), time.Second*5)

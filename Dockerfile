@@ -8,7 +8,7 @@ RUN go mod download
 
 COPY . .
 
-RUN go build -o bots-info-service ./cmd/server/main.go
+RUN CGO_ENABLED=0 GOOS=linux go build -o bots-info-service ./cmd/server
 
 FROM alpine
 
