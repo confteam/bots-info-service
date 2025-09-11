@@ -6,6 +6,8 @@ import (
 
 	"github.com/confteam/bots-info-service/internal/dto"
 	"github.com/confteam/bots-info-service/internal/logger"
+	"github.com/confteam/bots-info-service/internal/repository"
+	"github.com/jackc/pgx/v5"
 )
 
 func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
@@ -20,12 +22,23 @@ func (h Handler) Register(w http.ResponseWriter, r *http.Request) {
 	ctx, cancel := h.CreateContext()
 	defer cancel()
 
-	bot, err := h.repo.RegisterBot(ctx, req)
+	var result *repository.Bot
+
+	bot, err := h.repo.FindBot(ctx, req)
 	if err != nil {
-		http.Error(w, "Failed to register bot "+err.Error(), http.StatusInternalServerError)
-		return
+		if err == pgx.ErrNoRows {
+			result, err = h.repo.RegisterBot(ctx, req)
+			if err != nil {
+				http.Error(w, "Failed to register bot: "+err.Error(), http.StatusBadRequest)
+				return
+			}
+		} else {
+			http.Error(w, "Failed to find bot: "+err.Error(), http.StatusNotFound)
+		}
+	} else {
+		result = bot
 	}
 
 	w.Header().Set("Content-Type", "application/json")
-	json.NewEncoder(w).Encode(bot)
+	json.NewEncoder(w).Encode(result)
 }
